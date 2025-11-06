@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Normal Distribution: Theory and Applications</title>
+    <style>
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2c3e50;
+            --accent-color: #e74c3c;
+            --light-color: #ecf0f1;
+            --dark-color: #34495e;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .section {
+            background: white;
+            border-radius: 10px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+        
+        h2 {
+            color: var(--secondary-color);
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid var(--light-color);
+            padding-bottom: 0.5rem;
+        }
+        
+        .intro-text {
+            font-size: 1.1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .formula {
+            background-color: var(--light-color);
+            padding: 1rem;
+            border-radius: 5px;
+            margin: 1rem 0;
+            text-align: center;
+            font-family: 'Courier New', monospace;
+            font-size: 1.2rem;
+        }
+        
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .control-group {
+            flex: 1;
+            min-width: 200px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+        
+        input[type="range"] {
+            width: 100%;
+        }
+        
+        .value-display {
+            text-align: center;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+        
+        .chart-container {
+            height: 400px;
+            margin: 2rem 0;
+            position: relative;
+        }
+        
+        canvas {
+            width: 100%;
+            height: 100%;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        
+        .applications-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+        
+        .application-card {
+            background: var(--light-color);
+            border-radius: 8px;
+            padding: 1.5rem;
+            transition: transform 0.3s ease;
+        }
+        
+        .application-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        .application-card h3 {
+            color: var(--secondary-color);
+            margin-bottom: 1rem;
+        }
+        
+        .calculator {
+            background: var(--light-color);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-top: 1.5rem;
+        }
+        
+        .calculator-inputs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .calculator-input {
+            flex: 1;
+            min-width: 150px;
+        }
+        
+        input[type="number"] {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        
+        button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background-color 0.3s ease;
+        }
+        
+        button:hover {
+            background-color: var(--secondary-color);
+        }
+        
+        .result {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: white;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+        
+        footer {
+            background-color: var(--secondary-color);
+            color: white;
+            text-align: center;
+            padding: 1.5rem;
+            margin-top: 2rem;
+        }
+        
+        @media (max-width: 768px) {
+            .controls {
+                flex-direction: column;
+            }
+            
+            .calculator-inputs {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Normal Distribution: Theory and Applications</h1>
+            <p>Understanding the bell curve and its real-world significance</p>
+        </div>
+    </header>
+    
+    <div class="container">
+        <section class="section">
+            <h2>Introduction to Normal Distribution</h2>
+            <p class="intro-text">
+                The normal distribution, also known as the Gaussian distribution, is a probability distribution that is symmetric about the mean, 
+                showing that data near the mean are more frequent in occurrence than data far from the mean. In graph form, normal distribution 
+                will appear as a bell curve.
+            </p>
+            
+            <div class="formula">
+                f(x) = (1 / (σ√(2π))) * e<sup>-(x-μ)²/(2σ²)</sup>
+            </div>
+            
+            <p>
+                Where μ is the mean and σ is the standard deviation of the distribution. The normal distribution is important in statistics 
+                and is often used in the natural and social sciences to represent real-valued random variables whose distributions are not known.
+            </p>
+        </section>
+        
+        <section class="section">
+            <h2>Interactive Normal Distribution</h2>
+            <p>Adjust the parameters to see how the normal distribution curve changes:</p>
+            
+            <div class="controls">
+                <div class="control-group">
+                    <label for="mean">Mean (μ)</label>
+                    <input type="range" id="mean" min="-5" max="5" step="0.1" value="0">
+                    <div class="value-display" id="mean-value">0</div>
+                </div>
+                
+                <div class="control-group">
+                    <label for="stdDev">Standard Deviation (σ)</label>
+                    <input type="range" id="stdDev" min="0.5" max="3" step="0.1" value="1">
+                    <div class="value-display" id="stdDev-value">1</div>
+                </div>
+            </div>
+            
+            <div class="chart-container">
+                <canvas id="distributionChart"></canvas>
+            </div>
+            
+            <div class="controls">
+                <div class="control-group">
+                    <label for="xValue">X Value</label>
+                    <input type="range" id="xValue" min="-5" max="5" step="0.1" value="0">
+                    <div class="value-display" id="xValue-value">0</div>
+                </div>
+                
+                <div class="control-group">
+                    <label for="probability">Probability (Area under curve)</label>
+                    <div class="value-display" id="probability-value">0.3989</div>
+                </div>
+            </div>
+        </section>
+        
+        <section class="section">
+            <h2>Applications of Normal Distribution</h2>
+            <p>The normal distribution has numerous applications across various fields:</p>
+            
+            <div class="applications-grid">
+                <div class="application-card">
+                    <h3>Quality Control</h3>
+                    <p>Manufacturing processes often follow a normal distribution, allowing quality control engineers to set acceptable ranges for product dimensions.</p>
+                </div>
+                
+                <div class="application-card">
+                    <h3>Finance</h3>
+                    <p>Stock returns, while not perfectly normal, are often modeled using normal distribution for risk assessment and portfolio management.</p>
+                </div>
+                
+                <div class="application-card">
+                    <h3>Psychology</h3>
+                    <p>Many psychological traits like IQ scores, personality traits, and reaction times follow a normal distribution in the population.</p>
+                </div>
+                
+                <div class="application-card">
+                    <h3>Medicine</h3>
+                    <p>Biological measurements like blood pressure, cholesterol levels, and height often follow a normal distribution in healthy populations.</p>
+                </div>
+                
+                <div class="application-card">
+                    <h3>Social Sciences</h3>
+                    <p>Test scores, survey responses, and many other measurements in social sciences tend to follow a normal distribution.</p>
+                </div>
+                
+                <div class="application-card">
+                    <h3>Meteorology</h3>
+                    <p>Weather measurements like temperature, rainfall, and atmospheric pressure often follow normal distributions over time.</p>
+                </div>
+            </div>
+        </section>
+        
+        <section class="section">
+            <h2>Probability Calculator</h2>
+            <p>Calculate the probability of a value falling within a specific range in a normal distribution:</p>
+            
+            <div class="calculator">
+                <div class="calculator-inputs">
+                    <div class="calculator-input">
+                        <label for="calc-mean">Mean (μ)</label>
+                        <input type="number" id="calc-mean" value="0" step="0.1">
+                    </div>
+                    
+                    <div class="calculator-input">
+                        <label for="calc-stdDev">Standard Deviation (σ)</label>
+                        <input type="number" id="calc-stdDev" value="1" step="0.1" min="0.1">
+                    </div>
+                    
+                    <div class="calculator-input">
+                        <label for="calc-lower">Lower Bound</label>
+                        <input type="number" id="calc-lower" value="-1" step="0.1">
+                    </div>
+                    
+                    <div class="calculator-input">
+                        <label for="calc-upper">Upper Bound</label>
+                        <input type="number" id="calc-upper" value="1" step="0.1">
+                    </div>
+                </div>
+                
+                <button id="calculate-btn">Calculate Probability</button>
+                
+                <div class="result" id="calc-result">
+                    Probability will appear here after calculation.
+                </div>
+            </div>
+        </section>
+    </div>
+    
+    <footer>
+        <div class="container">
+            <p>Normal Distribution: Theory and Applications - Mini Project</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Get DOM elements
+        const meanSlider = document.getElementById('mean');
+        const stdDevSlider = document.getElementById('stdDev');
+        const xValueSlider = document.getElementById('xValue');
+        const meanValueDisplay = document.getElementById('mean-value');
+        const stdDevValueDisplay = document.getElementById('stdDev-value');
+        const xValueDisplay = document.getElementById('xValue-value');
+        const probabilityDisplay = document.getElementById('probability-value');
+        
+        const calcMean = document.getElementById('calc-mean');
+        const calcStdDev = document.getElementById('calc-stdDev');
+        const calcLower = document.getElementById('calc-lower');
+        const calcUpper = document.getElementById('calc-upper');
+        const calculateBtn = document.getElementById('calculate-btn');
+        const calcResult = document.getElementById('calc-result');
+        
+        // Initialize chart
+        const ctx = document.getElementById('distributionChart').getContext('2d');
+        let distributionChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: [],
+                datasets: [{
+                    label: 'Normal Distribution',
+                    data: [],
+                    borderColor: '#3498db',
+                    backgroundColor: 'rgba(52, 152, 219, 0.1)',
+                    borderWidth: 2,
+                    fill: true,
+                    tension: 0.4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'X'
+                        }
+                    },
+                    y: {
+                        title: {
+                            display: true,
+                            text: 'Probability Density'
+                        },
+                        beginAtZero: true
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return `Probability: ${context.parsed.y.toFixed(4)}`;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+        
+        // Normal distribution PDF function
+        function normalPDF(x, mean, stdDev) {
+            const variance = stdDev * stdDev;
+            const coefficient = 1 / (stdDev * Math.sqrt(2 * Math.PI));
+            const exponent = -((x - mean) ** 2) / (2 * variance);
+            return coefficient * Math.exp(exponent);
+        }
+        
+        // Update chart based on slider values
+        function updateChart() {
+            const mean = parseFloat(meanSlider.value);
+            const stdDev = parseFloat(stdDevSlider.value);
+            const xValue = parseFloat(xValueSlider.value);
+            
+            // Update display values
+            meanValueDisplay.textContent = mean;
+            stdDevValueDisplay.textContent = stdDev;
+            xValueDisplay.textContent = xValue;
+            
+            // Generate data for the chart
+            const labels = [];
+            const data = [];
+            
+            for (let x = -5; x <= 5; x += 0.1) {
+                labels.push(x.toFixed(1));
+                data.push(normalPDF(x, mean, stdDev));
+            }
+            
+            // Update chart data
+            distributionChart.data.labels = labels;
+            distributionChart.data.datasets[0].data = data;
+            
+            // Calculate and display probability for current x value
+            const probability = normalPDF(xValue, mean, stdDev);
+            probabilityDisplay.textContent = probability.toFixed(4);
+            
+            // Update chart
+            distributionChart.update();
+        }
+        
+        // Calculate probability between two values
+        function calculateProbability() {
+            const mean = parseFloat(calcMean.value);
+            const stdDev = parseFloat(calcStdDev.value);
+            const lower = parseFloat(calcLower.value);
+            const upper = parseFloat(calcUpper.value);
+            
+            if (lower >= upper) {
+                calcResult.textContent = "Error: Lower bound must be less than upper bound.";
+                calcResult.style.color = "red";
+                return;
+            }
+            
+            // Using the cumulative distribution function (CDF) approximation
+            function normalCDF(x, mean, stdDev) {
+                return 0.5 * (1 + erf((x - mean) / (stdDev * Math.sqrt(2))));
+            }
+            
+            // Error function approximation
+            function erf(x) {
+                // Abramowitz and Stegun approximation
+                const a1 =  0.254829592;
+                const a2 = -0.284496736;
+                const a3 =  1.421413741;
+                const a4 = -1.453152027;
+                const a5 =  1.061405429;
+                const p  =  0.3275911;
+                
+                const sign = (x >= 0) ? 1 : -1;
+                x = Math.abs(x);
+                
+                const t = 1.0 / (1.0 + p * x);
+                const y = 1.0 - (((((a5 * t + a4) * t) + a3) * t + a2) * t + a1) * t * Math.exp(-x * x);
+                
+                return sign * y;
+            }
+            
+            const probLower = normalCDF(lower, mean, stdDev);
+            const probUpper = normalCDF(upper, mean, stdDev);
+            const probability = probUpper - probLower;
+            
+            calcResult.textContent = `Probability: ${(probability * 100).toFixed(2)}% (${probability.toFixed(4)})`;
+            calcResult.style.color = "green";
+        }
+        
+        // Event listeners
+        meanSlider.addEventListener('input', updateChart);
+        stdDevSlider.addEventListener('input', updateChart);
+        xValueSlider.addEventListener('input', updateChart);
+        calculateBtn.addEventListener('click', calculateProbability);
+        
+        // Initialize the chart
+        updateChart();
+    </script>
+</body>
+</html>
